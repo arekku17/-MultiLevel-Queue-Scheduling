@@ -4,6 +4,7 @@
  */
 package Vistas;
 
+import Controlador.Cronometro;
 import Controlador.MultiLevelQueue;
 import Controlador.Proceso;
 import java.awt.Color;
@@ -28,6 +29,7 @@ public class ColasMultinivel extends javax.swing.JFrame {
     private List<JPanel> listPanels = new ArrayList<>();
     private List<Proceso> listProcess = new ArrayList<>();
     private MultiLevelQueue mlq;
+    Cronometro cronometro = Cronometro.getInstance();
     
     public ColasMultinivel(List<Proceso> lista) {
         this.listProcess = lista;
@@ -53,6 +55,9 @@ public class ColasMultinivel extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         panel3 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        lblSeconds = new javax.swing.JLabel();
+        lblHours = new javax.swing.JLabel();
+        lblMinutes = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -92,6 +97,18 @@ public class ColasMultinivel extends javax.swing.JFrame {
         });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 610, 120, 40));
 
+        lblSeconds.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblSeconds.setText("00");
+        jPanel1.add(lblSeconds, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 10, -1, -1));
+
+        lblHours.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblHours.setText("00:");
+        jPanel1.add(lblHours, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 10, -1, -1));
+
+        lblMinutes.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblMinutes.setText("00:");
+        jPanel1.add(lblMinutes, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 10, -1, -1));
+
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 860, 680));
 
         pack();
@@ -99,6 +116,11 @@ public class ColasMultinivel extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        cronometro.setLblHours(lblHours);
+        cronometro.setLblMinutes(lblMinutes);
+        cronometro.setLblSeconds(lblSeconds);
+        cronometro.actualizarLabels();
+        cronometro.start();
         mlq.run();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -175,6 +197,9 @@ public class ColasMultinivel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblHours;
+    private javax.swing.JLabel lblMinutes;
+    private javax.swing.JLabel lblSeconds;
     private javax.swing.JPanel panel1;
     private javax.swing.JPanel panel2;
     private javax.swing.JPanel panel3;
