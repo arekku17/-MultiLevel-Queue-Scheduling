@@ -4,6 +4,7 @@
  */
 package Vistas;
 
+import Controlador.Proceso;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JLabel;
@@ -25,6 +26,8 @@ public class Interfaz extends javax.swing.JFrame {
     
     private List<JSpinner> burstTimeSpinners;
     private List<JSpinner> prioritySpinners;
+    private List<Proceso> listProcess = new ArrayList<>();
+
     private int index;
     
     
@@ -32,8 +35,10 @@ public class Interfaz extends javax.swing.JFrame {
         initComponents();
         burstTimeSpinners = new ArrayList<>();
         prioritySpinners = new ArrayList<>();
+        index = 3;
         ((SpinnerNumberModel) countSpinner.getModel()).setMinimum(3);
         fillPanel(3);
+        
         
     }
 
@@ -119,7 +124,7 @@ public class Interfaz extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
                 .addGap(20, 20, 20))
         );
 
@@ -135,7 +140,17 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        int prioridad = 0;
+        int bursttime = 0;
+        for(int i = 0; i < index; i++){
+            prioridad = Integer.parseInt(prioritySpinners.get(i).getValue().toString());
+            bursttime = Integer.parseInt(burstTimeSpinners.get(i).getValue().toString());
+            Proceso p = new Proceso(prioridad,bursttime);
+            listProcess.add(p);
+        }
+        ColasMultinivel vista = new ColasMultinivel(listProcess);
+        vista.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     
@@ -145,15 +160,16 @@ public class Interfaz extends javax.swing.JFrame {
         panel.removeAll();
         for(int i = 0; i < n; i++){
             JSpinner btSpinner = new JSpinner();
-            ((SpinnerNumberModel) btSpinner.getModel()).setMinimum(0);
+            ((SpinnerNumberModel) btSpinner.getModel()).setValue(1);
+            ((SpinnerNumberModel) btSpinner.getModel()).setMinimum(1);
             
             JSpinner pSpinner = new JSpinner();
             ((SpinnerNumberModel) pSpinner.getModel()).setMinimum(0);
-
+            ((SpinnerNumberModel) pSpinner.getModel()).setMaximum(2);
             
             
             JLabel btLabel = new JLabel();
-            btLabel.setText("Burst Time del Proceso " + (i+1));
+            btLabel.setText("Burst Time del Proceso " + (i+1) + " (seg)");
             JLabel pLabel = new JLabel();
             pLabel.setText("Prioridad (0/1/2)");
 

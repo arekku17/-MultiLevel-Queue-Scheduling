@@ -4,6 +4,17 @@
  */
 package Vistas;
 
+import Controlador.MultiLevelQueue;
+import Controlador.Proceso;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 /**
  *
  * @author jose_
@@ -13,8 +24,16 @@ public class ColasMultinivel extends javax.swing.JFrame {
     /**
      * Creates new form ColasMultinivel
      */
-    public ColasMultinivel() {
+    
+    private List<JPanel> listPanels = new ArrayList<>();
+    private List<Proceso> listProcess = new ArrayList<>();
+    private MultiLevelQueue mlq;
+    
+    public ColasMultinivel(List<Proceso> lista) {
+        this.listProcess = lista;
         initComponents();
+        fillPanels();
+        mlq = new MultiLevelQueue(listProcess,listPanels);
     }
 
     /**
@@ -28,12 +47,12 @@ public class ColasMultinivel extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel2 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
-        jPanel6 = new javax.swing.JPanel();
+        panel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        panel2 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        panel3 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -46,75 +65,32 @@ public class ColasMultinivel extends javax.swing.JFrame {
         jLabel1.setText("Proceso 1 (FCFS) ");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 21, -1, 30));
 
-        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.X_AXIS));
+        panel1.setLayout(new java.awt.GridLayout(1, 0, 5, 0));
+        jPanel1.add(panel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, -1, -1));
 
-        jPanel3.setBackground(new java.awt.Color(51, 153, 255));
-        jPanel3.setPreferredSize(new java.awt.Dimension(108, 108));
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel2.setText("Proceso 2 (RR) ");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, -1, 30));
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 127, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 128, Short.MAX_VALUE)
-        );
+        panel2.setLayout(new java.awt.GridLayout(1, 0, 5, 0));
+        jPanel1.add(panel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, -1, -1));
 
-        jPanel2.add(jPanel3);
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel3.setText("Proceso 3 (FCFS) ");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 400, -1, 30));
 
-        jPanel4.setBackground(new java.awt.Color(0, 0, 204));
-        jPanel4.setPreferredSize(new java.awt.Dimension(108, 108));
+        panel3.setLayout(new java.awt.GridLayout(1, 0, 5, 0));
+        jPanel1.add(panel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 450, -1, -1));
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 127, Short.MAX_VALUE)
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 128, Short.MAX_VALUE)
-        );
-
-        jPanel2.add(jPanel4);
-
-        jPanel5.setBackground(new java.awt.Color(204, 0, 51));
-        jPanel5.setPreferredSize(new java.awt.Dimension(108, 108));
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 127, Short.MAX_VALUE)
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 128, Short.MAX_VALUE)
-        );
-
-        jPanel2.add(jPanel5);
-
-        jPanel6.setBackground(new java.awt.Color(102, 0, 0));
-        jPanel6.setPreferredSize(new java.awt.Dimension(108, 108));
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 127, Short.MAX_VALUE)
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 128, Short.MAX_VALUE)
-        );
-
-        jPanel2.add(jPanel6);
-
-        jScrollPane1.setViewportView(jPanel2);
-
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 510, 130));
+        jButton1.setText("Iniciar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 610, 120, 40));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 860, 680));
 
@@ -122,9 +98,45 @@ public class ColasMultinivel extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        mlq.run();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
+    
+    public void fillPanels(){
+        for(int i = 0; i < listProcess.size(); i++){
+            JPanel panel = new JPanel();
+            panel.setPreferredSize(new Dimension(108, 108));
+            panel.setLayout(new GridLayout(2,1));
+            
+            Font font = new Font("Courier", Font.BOLD,14);
+            JLabel label = new JLabel();
+            label.setText(" Proceso " + (i+1));
+            label.setFont(font);
+            JLabel label2 = new JLabel();
+            label2.setText("  Burst Time: " + listProcess.get(i).getBurstTime());
+            panel.add(label);
+            panel.add(label2);
+            
+            panel.setBackground(new Color(158,158,158));
+            switch(listProcess.get(i).getPriority()){
+                case 0:
+                    panel1.add(panel);
+                    break;
+                case 1:
+                    panel2.add(panel);
+                    break;
+                case 2:
+                    panel3.add(panel);
+                    break;
+            }
+            listPanels.add(panel);
+        }
+    }
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -152,19 +164,19 @@ public class ColasMultinivel extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ColasMultinivel().setVisible(true);
+                new ColasMultinivel(null).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel panel1;
+    private javax.swing.JPanel panel2;
+    private javax.swing.JPanel panel3;
     // End of variables declaration//GEN-END:variables
 }
