@@ -51,7 +51,7 @@ public class Cronometro extends Thread {
     @Override
     public void run() {
         try {//si ocurre un error al dormir el proceso(sleep(999))
-            for (;;) { //inicio del for infinito 
+            while (state) { //inicio del for infinito 
 
                 //DANDO FORMATO
                 if (hours < 10) {

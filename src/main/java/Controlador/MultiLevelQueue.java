@@ -24,6 +24,8 @@ public class MultiLevelQueue implements Runnable {
     private List<JPanel> SecondPanelList = new ArrayList<>();
 
     private JPanel panelActual;
+    Cronometro cronometro = Cronometro.getInstance();
+
     int[] completionTime = new int[maxProcess];
     int[] turnAroundTime = new int[maxProcess];
     int[] waitingTime = new int[maxProcess];
@@ -51,80 +53,61 @@ public class MultiLevelQueue implements Runnable {
         return listProcess.get(i).getBurstTime();
     }
 
-    public void simulateProcess1() {
+    public void simulateProcesses() {
         Runnable myRunnable = new Runnable() {
             public void run() {
-                for (int i = 0; i < FirstProcessList.size(); i++) {
-                    EventQueue.invokeLater(new Runnable() {
-                        public void run() {
-                            listPanels.get(index1[count]).setBackground(new Color(255, 77, 77));
-                        }
-                    });
-
-                    try {
-                        System.out.println("delay starts");
-                        Thread.sleep(FirstProcessList.get(i).getBurstTime() * 1000); // 2000 mSec
-                        System.out.println("delay is over\n");
-                    } catch (InterruptedException ie) {
-                        System.out.println(ie);
-                    }
-                    EventQueue.invokeLater(new Runnable() {
-                        public void run() {
-                            System.out.println(count);
-                            listPanels.get(index1[count]).setBackground(new Color(126, 255, 170));
-                            count++;
-                            if (count == FirstProcessList.size()) {
-                                count = 0;
-                            }
-                        }
-                    });
-                }
-
-                simulateProcess2();
-
-                for (int i = 0; i < ThirdProcessList.size(); i++) {
-                    EventQueue.invokeLater(new Runnable() {
-                        public void run() {
-                            listPanels.get(index3[count]).setBackground(new Color(255, 77, 77));
-                        }
-                    });
-
-                    try {
-                        System.out.println("delay starts");
-                        Thread.sleep(ThirdProcessList.get(i).getBurstTime() * 1000); // 2000 mSec
-                        System.out.println("delay is over\n");
-                    } catch (InterruptedException ie) {
-                        System.out.println(ie);
-                    }
-                    EventQueue.invokeLater(new Runnable() {
-                        public void run() {
-                            System.out.println(count);
-                            listPanels.get(index3[count]).setBackground(new Color(126, 255, 170));
-                            count++;
-                            if (count == ThirdProcessList.size()) {
-                                count = 0;
-                            }
-                        }
-                    });
-                }
+                simulateProcess1(); //Proceso 1 (FCFS)
+                simulateProcess2(); //Proceso 2 (RR)
+                simulateProcess3(); //Proceso 3 (FCFS)
+                cronometro.state = false; //Es para que termine el cronometro
 
             }
         };
         new Thread(myRunnable).start();
     }
 
+    public void simulateProcess1() {
+        for (int i = 0; i < FirstProcessList.size(); i++) {
+            //PINTAMOS DE ROJO EL PROCESO EN EJECUCIÓN
+            EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    listPanels.get(index1[count]).setBackground(new Color(255, 77, 77));
+                }
+            });
+            //ESPERAMOS EL TIEMPO DE BURST O DE RAFAGA CON UN SLEEP
+            try {
+                System.out.println("delay starts");
+                Thread.sleep(FirstProcessList.get(i).getBurstTime() * 1000); // 2000 mSec
+                System.out.println("delay is over\n");
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            //PINTAMOS DE VERDE EL PROCESO QUE ACABA DE TERMINAR DE EJECUTARSE
+            EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    System.out.println(count);
+                    listPanels.get(index1[count]).setBackground(new Color(126, 255, 170));
+                    count++;
+                    if (count == FirstProcessList.size()) {
+                        count = 0;
+                    }
+                }
+            });
+        }
+    }
+
     public void simulateProcess2() {
-        int t = 0;
         while (true) {
             boolean done = true;
-            // Traverse all processes one by one repeatedly
+            // Atraviesa todos los procesos uno por uno repetidamente
             for (int i = 0; i < SecondProcessList.size(); i++) {
-                // If burst time of a process is greater than 0 then only need to process further
+                // Si el tiempo de ráfaga de un proceso es mayor que 0, sigue procesando
                 if (SecondProcessList.get(i).getBurstTime() > 0) {
-                    done = false;                                           // There is a pending process
+                    done = false;                                           // Hay un proceso pendiente
 
+                    //Si el tiempo de rafaga es mayor que el cuantum realiza lo siguiente:
                     if (SecondProcessList.get(i).getBurstTime() > quantum) {
-                        // Increase the value of t i.e. shows how much time a process has been processed
+                        //Pinta de color rojo
                         EventQueue.invokeLater(new Runnable() {
                             public void run() {
                                 if (count == SecondPanelList.size()) {
@@ -137,11 +120,12 @@ public class MultiLevelQueue implements Runnable {
 
                         try {
                             System.out.println("delay starts");
-                            Thread.sleep(quantum * 1000); // 2000 mSec
+                            Thread.sleep(quantum * 1000); // Espera el tiempo del cuantum que es 2 segundos
                             System.out.println("delay is over\n");
                         } catch (InterruptedException ie) {
                             System.out.println(ie);
                         }
+                        //Pinta de gris oscuro
                         EventQueue.invokeLater(new Runnable() {
                             public void run() {
                                 System.out.println(count);
@@ -152,13 +136,12 @@ public class MultiLevelQueue implements Runnable {
                                 count++;
                             }
                         });
-
-                        t += quantum;
-                        // Decrease the burst_time of current process by quantum
+                        // Disminuir el burst_time del proceso actual por el cuantum
                         SecondProcessList.get(i).setBurstTime(SecondProcessList.get(i).getBurstTime() - quantum);
-                    } // If burst time is smaller than or equal to quantum. Last cycle for this process
+                    } 
+                    // Si el tiempo de ráfaga es menor o igual que el cuanto. Último ciclo para este proceso
                     else {
-                        // Increase the value of t i.e. shows how much time a process has been processed
+                        //Pinta de color rojo
                         EventQueue.invokeLater(new Runnable() {
                             public void run() {
                                 if (count == SecondPanelList.size()) {
@@ -171,11 +154,13 @@ public class MultiLevelQueue implements Runnable {
 
                         try {
                             System.out.println("delay starts");
-                            Thread.sleep(SecondProcessList.get(i).getBurstTime() * 1000); // 2000 mSec
+                            Thread.sleep(SecondProcessList.get(i).getBurstTime() * 1000); // Espera lo que quede del tiempo de rafaga
                             System.out.println("delay is over\n");
                         } catch (InterruptedException ie) {
                             System.out.println(ie);
                         }
+                        
+                        //Pinta de color verde porque ya finalizó el proceso
                         EventQueue.invokeLater(new Runnable() {
                             public void run() {
                                 if (count == SecondPanelList.size()) {
@@ -186,17 +171,49 @@ public class MultiLevelQueue implements Runnable {
                                 SecondPanelList.remove(count);
                             }
                         });
+                        
+                        //El tiempo de rafaga del proceso lo igualamos a cero porque ya acabó.
                         SecondProcessList.get(i).setBurstTime(0);
                     }
                 }
             }
 
-            // If all processes are done
+            // Si todos los procesos ya acabaron entonces salimos del bucle.
             if (done == true) {
                 break;
             }
         }
 
+    }
+
+    public void simulateProcess3() {
+        for (int i = 0; i < ThirdProcessList.size(); i++) {
+            //PINTAMOS DE ROJO EL PROCESO EN EJECUCIÓN
+            EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    listPanels.get(index3[count]).setBackground(new Color(255, 77, 77));
+                }
+            });
+            //ESPERAMOS EL TIEMPO DE BURST O DE RAFAGA CON UN SLEEP
+            try {
+                System.out.println("delay starts");
+                Thread.sleep(ThirdProcessList.get(i).getBurstTime() * 1000); // 2000 mSec
+                System.out.println("delay is over\n");
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            //PINTAMOS DE VERDE EL PROCESO QUE ACABA DE TERMINAR DE EJECUTARSE
+            EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    System.out.println(count);
+                    listPanels.get(index3[count]).setBackground(new Color(126, 255, 170));
+                    count++;
+                    if (count == ThirdProcessList.size()) {
+                        count = 0;
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -207,7 +224,7 @@ public class MultiLevelQueue implements Runnable {
             public void run() {
                 EventQueue.invokeLater(new Runnable() {
                     public void run() {
-                        simulateProcess1();
+                        simulateProcesses();
                     }
                 });
             }
@@ -221,25 +238,21 @@ public class MultiLevelQueue implements Runnable {
         int z = 0;
         int x = 0;
 
-        // High priority queue execution with FCFS scheduling algorithm
+        // Ejecución de cola de PRIMERA PRIORIDAD con algoritmo de programación FCFS
         for (int i = 0; i < n; i++) {
             if (getP(i) == 0) {
                 index1[x] = i;
                 x++;
                 FirstProcessList.add(listProcess.get(i));
-                completionTime[i] = completionTime[z] + getBurst(i);
-                z = i;
-                turnAroundTime[i] = completionTime[i] - arrivalTime;
-                waitingTime[i] = turnAroundTime[i] - getBurst(i);
             }
         }
 
         x = 0;
 
-        // Low Priority queue execution with Round Robin scheduling algorithm
+        // Ejecución de cola de SEGUNDA PRIORIDAD con algoritmo de programación Round Robin
         for (int i = 0; i < n; i++) {
             if (getP(i) == 1) {
-                listaSegundosProcesos.add(i);                            //  lowPriorityProcessList contains all the process (like p2,p3,p4) which are in low priority
+                listaSegundosProcesos.add(i);
                 SecondPanelList.add(listPanels.get(i));
                 SecondProcessList.add(listProcess.get(i));
                 index2[x] = i;
@@ -247,81 +260,17 @@ public class MultiLevelQueue implements Runnable {
             }
         }
 
-        int[] lowPriorityProcessArray = new int[50];
-        for (int i = 0; i < listaSegundosProcesos.size(); i++) {
-            lowPriorityProcessArray[i] = listaSegundosProcesos.get(i);     //Copying the process from lowPriorityProcessList to lowPriorityProcessArray
-        }
-
-        // Make a copy of burst times burstTime[] to store remaining burst times.
-        int rem_bt[] = new int[listaSegundosProcesos.size()];
-        for (int i = 0; i < listaSegundosProcesos.size(); i++) {
-            rem_bt[i] = getBurst(lowPriorityProcessArray[i]);           // Burst time of all the process with low priority are copied into rem_bt array
-        }
-
-        int t = completionTime[z]; // Current time in RR
-
-        // Keep traversing processes in round robin manner until all of them are not done.
-        while (true) {
-            boolean done = true;
-
-            // Traverse all processes one by one repeatedly
-            for (int i = 0; i < listaSegundosProcesos.size(); i++) {
-                // If burst time of a process is greater than 0 then only need to process further
-                if (rem_bt[i] > 0) {
-                    done = false;                                           // There is a pending process
-
-                    if (rem_bt[i] > quantum) {
-                        // Increase the value of t i.e. shows how much time a process has been processed
-                        t += quantum;
-                        // Decrease the burst_time of current process by quantum
-                        rem_bt[i] -= quantum;
-                    } // If burst time is smaller than or equal to quantum. Last cycle for this process
-                    else {
-                        // Increase the value of t i.e. shows how much time a process has been processed
-                        t = t + rem_bt[i];
-                        completionTime[lowPriorityProcessArray[i]] = t;
-
-                        // As the process gets fully executed make its remaining burst time = 0
-                        rem_bt[i] = 0;
-                    }
-                }
-            }
-
-            // If all processes are done
-            if (done == true) {
-                break;
-            }
-        }
-
         z = 0;
         x = 0;
 
-        // High priority queue execution with FCFS scheduling algorithm
+        //Ejecución de cola de TERCERA PRIORIDAD con algoritmo de programación FCFS
         for (int i = 0; i < n; i++) {
             if (getP(i) == 2) {
                 index3[x] = i;
                 x++;
                 ThirdProcessList.add(listProcess.get(i));
-                completionTime[i] = completionTime[z] + getBurst(i);
-                z = i;
-                turnAroundTime[i] = completionTime[i] - arrivalTime;
-                waitingTime[i] = turnAroundTime[i] - getBurst(i);
             }
         }
-
-        // Calculating waiting time and turn around time for all the process in low priority queue
-        for (int j = 0; j < listaSegundosProcesos.size(); j++) {
-            turnAroundTime[lowPriorityProcessArray[j]] = completionTime[lowPriorityProcessArray[j]];
-            waitingTime[lowPriorityProcessArray[j]] = turnAroundTime[lowPriorityProcessArray[j]] - getBurst(lowPriorityProcessArray[j]);
-        }
-
-        for (int i = 0; i < n; i++) {
-            totalwt += waitingTime[i];
-            totaltat += turnAroundTime[i];
-        }
-
-        System.out.println("\n" + "Average Waiting Time is: " + totalwt / n);
-        System.out.println("Average Turnaround Time is : " + totaltat / n);
 
     }
 
